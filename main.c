@@ -102,7 +102,13 @@ bool check_endpoint() {
         int dxy[4][2] = { 1, 1, 1, -1, -1, 1, -1, -1 }, i = 0;
         for (; i < 4; i++) {
             if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
-                // To be continue;
+                int nx = a + dxy[i][0], ny = b + dxy[i][1];
+                while (nx != d && ny != c) {
+                    if (board[nx][ny] != ' ') return false;
+                    nx += dxy[i][0];
+                    ny += dxy[i][1];
+                }
+                break;
             }
         }
         return true;
