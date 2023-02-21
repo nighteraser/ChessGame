@@ -71,16 +71,28 @@ bool check_endpoint() {
     }
     if (chess == 'R') {
         if (vx != 0 && vy != 0 ) return false;
-        if (vx == 0) {
+        if (vy > 0) {
             int i = a + 1;
             while (i < c) {
                 if (board[i++][b] != ' ') return false;
             }
         }
-        else {
+        else if (vx > 0){
             int i = b + 1;
             while (i < d) {
                 if (board[a][i++] != ' ') return false;
+            }
+        }
+        else if (vy < 0) {
+            int i = a - 1;
+            while (i > c) {
+                if (board[i--][b] != ' ') return false;
+            }
+        }
+        else {
+            int i = b - 1;
+            while (i > d) {
+                if (board[a][i--] != ' ') return false;
             }
         }
         return true;
