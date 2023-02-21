@@ -12,6 +12,7 @@ char board[8][8] = {
 };
 char blackchess[6] = { 'r', 'n', 'b', 'q', 'k', 'p' };
 char whitechess[6] = { 'R', 'N', 'B', 'Q', 'K', 'P' };
+int a, b, c, d;      // a: first y ; b: first x ; c: end y ; d: end x
 
 
 void draw_board() {
@@ -26,31 +27,49 @@ void draw_board() {
     }
     printf("\n");
 }
+bool check_blackchess() {
+    int i = 0;
+    for (; i < 6; i++)
+        if (board[a][b] == blackchess[i]) return true;
+    return false;
+}
+bool check_whitechess() {
+    int i = 0;
+    for (; i < 6; i++)
+        if (board[a][b] == whitechess[i]) return true;
+    return false;
+}
+bool check_endpoint() {
+    char chess = board[a][b];
+    int vx = d - b;
+    int vy = c - a;
+    if (chess == 'P') {
+        if (vx == 0 && vy == -1) return true;
+    }
+    return false;
+}
 
-void move(int a, int b, int c, int d) {
-    char tmp;
-    tmp = board[a][b];
-    board[a][b] = board[c][d];
-    board[c][d] = tmp;
+void move() {
+    board[c][d] = board[a][b];
+    board[a][b] = ' ';
 }
 
 int main() {
-    int a, b, c, d;
-
+    
     draw_board();
-    printf("Please choose the chess position: \n");
+    printf("Please choose the chess position: \n");  // "White" go first. choosing the white chess
     while (1) {
         scanf_s("%d %d", &a, &b, 1);
-        if (a >= 0 && a < 8 && b >= 0 && b < 8) break;
+        if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_whitechess()) break;
         printf("Please enter the correct chess position\n");
     }
     printf("Please choose the end position: \n");
     while (1) {
-        scanf_s("%d %d", &c, &d, 1);
-        if (c >= 0 && c < 8 && d >= 0 && d < 8) break;
+        scanf_s("%d %d", &c, &d, 2);
+        if (c >= 0 && c < 8 && d >= 0 && d < 8 && check_endpoint()) break;
         printf("Please enter the correct end position\n");
-    }
-    move(a, b, c, d);
+    }                                       
+    move();                  
     draw_board();
     
 
