@@ -22,11 +22,20 @@ void draw_board() {
         }
         printf("\n");
     }
+    printf("\n");
+}
+
+void move(int a, int b, int c, int d) {
+    char tmp;
+    tmp = board[a][b];
+    board[a][b] = board[c][d];
+    board[c][d] = tmp;
 }
 
 int main() {
     int a, b, c, d;
 
+    draw_board();
     printf("Please choose the chess position: \n");
     while (1) {
         scanf_s("%d %d", &a, &b, 1);
@@ -39,9 +48,9 @@ int main() {
         if (c >= 0 && c < 8 && d >= 0 && d < 8) break;
         printf("Please enter the correct end position\n");
     }
+    move(a, b, c, d);
+    draw_board();
     
-
-
 
     return 0;
 }
