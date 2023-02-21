@@ -1,6 +1,6 @@
 #include <stdio.h>
-
-char board[8][8] = {
+#include <stdlib.h>
+/*char board[8][8] = {
     {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
     {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -9,6 +9,17 @@ char board[8][8] = {
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
     {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
     {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+};*/
+
+char board[8][8] = {
+    {'r', ' ', 'b', ' ', ' ', 'b', ' ', 'r'},
+    {'p', 'p', ' ', ' ', ' ', ' ', 'p', 'p'},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
+    {'R', 'N', 'B', 'Q', 'K', 'B', ' ', 'R'}
 };
 char blackchess[6] = { 'r', 'n', 'b', 'q', 'k', 'p' };
 char whitechess[6] = { 'R', 'N', 'B', 'Q', 'K', 'P' };
@@ -98,20 +109,23 @@ bool check_endpoint() {
         return true;
     }
     if (chess == 'B') {
-        if (vx != vy) return false;
+        if (abs(vx) != abs(vy)) return false;
         int dxy[4][2] = { 1, 1, 1, -1, -1, 1, -1, -1 }, i = 0;
         for (; i < 4; i++) {
             if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
-                int nx = a + dxy[i][0], ny = b + dxy[i][1];
+                int ny = a + dxy[i][0], nx = b + dxy[i][1];
                 while (nx != d && ny != c) {
                     if (board[nx][ny] != ' ') return false;
-                    nx += dxy[i][0];
-                    ny += dxy[i][1];
+                    ny += dxy[i][0];
+                    nx += dxy[i][1];
                 }
                 break;
             }
         }
         return true;
+    }
+    if (chess == 'Q') {
+
     }
     return false;
 }
@@ -119,8 +133,8 @@ bool check_endpoint() {
 
 
 int main() {
-
-    draw_board();
+    while (1) {
+draw_board();
     printf("Please choose the chess position: \n");  // "White" go first. choosing the white chess
     while (1) {
         scanf_s("%d %d", &a, &b, 1);
@@ -134,7 +148,9 @@ int main() {
         printf("Please enter the correct end position\n");
     }
     move();
-    draw_board();
+    }
+    
+    //draw_board();
 
 
     return 0;
