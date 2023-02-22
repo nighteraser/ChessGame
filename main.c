@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-/*char board[8][8] = {
+
+char board[8][8] = {
     {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
     {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -9,18 +10,8 @@
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
     {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
     {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-};*/
-
-char board[8][8] = {
-    {'r', ' ', 'b', ' ', ' ', 'b', ' ', 'r'},
-    {'p', 'p', ' ', ' ', 'P', ' ', 'p', 'p'},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
-    {'R', 'N', 'B', 'Q', 'K', 'B', ' ', 'R'}
 };
+
 char blackchess[6] = { 'r', 'n', 'b', 'q', 'k', 'p' };
 char whitechess[6] = { 'R', 'N', 'B', 'Q', 'K', 'P' };
 bool player = true;
@@ -213,7 +204,11 @@ int main() {
                 if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_whitechess(c, d) && check_endpoint()) break;
                 printf("Warning!Please enter the correct end position:\n");
             }
-
+            if (board[c][d] == 'k') {
+                gameover = true;
+                move();
+                break;
+            }
             if (board[a][b] == 'P' && c == 0) {
                 char cc;
                 printf("Choosing (B / R / Q / N)\n");
@@ -226,10 +221,6 @@ int main() {
                 }
             }
             move();
-            if (board[c][d] == 'k') {
-                gameover = true;
-                break;
-            }
             continue;
         }
         else {
@@ -246,20 +237,32 @@ int main() {
                 if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_blackchess(c, d) && check_endpoint()) break;
                 printf("Warning!Please enter the correct end position:\n");
             }
-            move();
             if (board[c][d] == 'K') {
                 gameover = true;
+                move();
                 break;
             }
+            if (board[a][b] == 'p' && c == 7) {
+                char cc;
+                printf("Choosing (b / r / q / n)\n");
+                while (1) {
+                    scanf_s("%c", &cc, 1);
+                    if (cc == 'b' || cc == 'r' || cc == 'q' || cc == 'n') {
+                        board[a][b] = cc;
+                        break;
+                    }
+                }
+            }
+            move();
             continue;
         }
     }
     draw_board();
-    printf("\nGAMEOVER!!! winner ");
+    printf("GAMEOVER!!! winner ");
     if (player)
-        printf("BLACK");
+        printf("BLACK\n");
     else
-        printf("WHITE");
+        printf("WHITE\n");
 
     return 0;
 }
