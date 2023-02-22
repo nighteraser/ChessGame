@@ -13,7 +13,7 @@
 
 char board[8][8] = {
     {'r', ' ', 'b', ' ', ' ', 'b', ' ', 'r'},
-    {'p', 'p', ' ', ' ', ' ', ' ', 'p', 'p'},
+    {'p', 'p', ' ', ' ', 'P', ' ', 'p', 'p'},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
     {' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' '},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -56,6 +56,14 @@ void move() {
     board[c][d] = board[a][b];
     board[a][b] = ' ';
 }
+void chess_change() {
+    char cc;        
+    printf("Choosing (B / R / Q / N)\n");
+    scanf_s("%c", &cc, 1);
+    if (cc == 'B' || cc == 'R' || cc == 'Q' || cc == 'N') {
+        board[a][b] = cc;
+    }
+}
 bool check_endpoint() {
     char chess = board[a][b];
     int vx = d - b;
@@ -64,12 +72,14 @@ bool check_endpoint() {
         if (vx == 0 && vy == -1 && board[c][d] == ' ') return true;
         if (vx == 1 && vy == -1 && check_blackchess(c, d)) return true;
         if (vx == -1 && vy == -1 && check_blackchess(c, d)) return true;
+        if (a == 6 && vx == 0 && vy == -2 && board[c][d] == ' ') return true;
         return false;
     }
     if (chess == 'p') {
         if (vx == 0 && vy == 1 && board[c][d] == ' ') return true;
         if (vx == 1 && vy == 1 && check_whitechess(c, d)) return true;
         if (vx == -1 && vy == 1 && check_whitechess(c, d)) return true;
+        if (a == 1 && vx == 0 && vy == 2 && board[c][d] == ' ') return true;
         return false;
     }
     if (chess == 'K' || chess == 'k') {
@@ -202,6 +212,18 @@ int main() {
                 scanf_s("%d %d", &c, &d, 2);
                 if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_whitechess(c, d) && check_endpoint()) break;
                 printf("Warning!Please enter the correct end position:\n");
+            }
+
+            if (board[a][b] == 'P' && c == 0) {
+                char cc;
+                printf("Choosing (B / R / Q / N)\n");
+                while (1) {
+                    scanf_s("%c", &cc, 1);
+                    if (cc == 'B' || cc == 'R' || cc == 'Q' || cc == 'N') {
+                        board[a][b] = cc;
+                        break;
+                    }
+                }
             }
             move();
             if (board[c][d] == 'k') {
