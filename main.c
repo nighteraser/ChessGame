@@ -15,7 +15,7 @@ char board[8][8] = {
     {'r', ' ', 'b', ' ', ' ', 'b', ' ', 'r'},
     {'p', 'p', ' ', ' ', ' ', ' ', 'p', 'p'},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-    {' ', ' ', ' ', 'B', ' ', ' ', ' ', ' '},
+    {' ', ' ', ' ', 'Q', ' ', ' ', ' ', ' '},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
     {' ', ' ', ' ', ' ', ' ', ' ', ' ', 'P'},
@@ -23,6 +23,8 @@ char board[8][8] = {
 };
 char blackchess[6] = { 'r', 'n', 'b', 'q', 'k', 'p' };
 char whitechess[6] = { 'R', 'N', 'B', 'Q', 'K', 'P' };
+bool player = true;
+bool gameover = false;
 int a, b, c, d;      // a: first y ; b: first x ; c: end y ; d: end x
 
 
@@ -64,7 +66,13 @@ bool check_endpoint() {
         if (vx == -1 && vy == -1 && check_blackchess(c, d)) return true;
         return false;
     }
-    if (chess == 'K') {
+    if (chess == 'p') {
+        if (vx == 0 && vy == 1 && board[c][d] == ' ') return true;
+        if (vx == 1 && vy == 1 && check_whitechess(c, d)) return true;
+        if (vx == -1 && vy == 1 && check_whitechess(c, d)) return true;
+        return false;
+    }
+    if (chess == 'K' || chess == 'k') {
         int dxy[8][2] = { 1, 1, 0, 1, -1, 1, 1, 0 , -1, 0, 1, -1, 0, -1, -1, -1 };
         int i = 0;
         for (; i < 8; i++) {
@@ -72,7 +80,7 @@ bool check_endpoint() {
         }
         return false;
     }
-    if (chess == 'N') {
+    if (chess == 'N' || chess == 'n') {
         int dxy[8][2] = { 2, 1, 2, -1, -2, 1, -2, -1, 1, 2, -1, 2, 1, -2, -1, -2 };
         int i = 0;
         for (; i < 8; i++) {
@@ -80,7 +88,7 @@ bool check_endpoint() {
         }
         return false;
     }
-    if (chess == 'R') {
+    if (chess == 'R' || chess == 'r') {
         if (vx != 0 && vy != 0 ) return false;
         if (vy > 0) {
             int i = a + 1;
@@ -108,14 +116,14 @@ bool check_endpoint() {
         }
         return true;
     }
-    if (chess == 'B') {
+    if (chess == 'B' || chess == 'b') {
         if (abs(vx) != abs(vy)) return false;
         int dxy[4][2] = { 1, 1, 1, -1, -1, 1, -1, -1 }, i = 0;
         for (; i < 4; i++) {
             if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
                 int ny = a + dxy[i][0], nx = b + dxy[i][1];
                 while (nx != d && ny != c) {
-                    if (board[nx][ny] != ' ') return false;
+                    if (board[ny][nx] != ' ') return false;
                     ny += dxy[i][0];
                     nx += dxy[i][1];
                 }
@@ -124,34 +132,113 @@ bool check_endpoint() {
         }
         return true;
     }
-    if (chess == 'Q') {
+    if (chess == 'Q' || chess == 'q') {
+        if (vx == 0 && vy != 0) {
+            if (vy > 0) {
+                int i = a + 1;
+                while (i < c) {
+                    if (board[i++][b] != ' ') return false;
+                }
+                return true;
+            }
+            else {
+                int i = a - 1;
+                while (i > c) {
+                    if (board[i--][b] != ' ') return false;
+                }
+                return true;
+            }
+        }
+        if (vx != 0 && vy == 0) {
+            if (vx > 0) {
+                int i = b + 1;
+                while (i < d) {
+                    if (board[a][i++] != ' ') return false;
+                }
+                return true;
+            }
+            else {
+                int i = b - 1;
+                while (i > d) {
+                    if (board[a][i--] != ' ') return false;
+                }
+                return true;
+            }
+        }
+        if (abs(vx) == abs(vy)) {
+            int dxy[4][2] = { 1, 1, 1, -1, -1, 1, -1, -1 }, i = 0;
+            for (; i < 4; i++) {
+                if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
+                    int ny = a + dxy[i][0], nx = b + dxy[i][1];
+                    while (nx != d && ny != c) {
+                        if (board[ny][nx] != ' ') return false;
+                        ny += dxy[i][0];
+                        nx += dxy[i][1];
+                    }
+                    return true;
+                }            
+            }
+        }
 
+        return false;
     }
     return false;
 }
 
 
-
 int main() {
-    while (1) {
-draw_board();
-    printf("Please choose the chess position: \n");  // "White" go first. choosing the white chess
-    while (1) {
-        scanf_s("%d %d", &a, &b, 1);
-        if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_whitechess(a, b)) break;
-        printf("Please enter the correct chess position\n");
+    while (!gameover) {
+        draw_board();
+        if (player) {       // "White" go first. choosing the white chess
+            player = false;
+            printf("Please choose the \"WHITE\" chess position: \n");
+            while (1) {
+                scanf_s("%d %d", &a, &b, 1);
+                if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_whitechess(a, b)) break;
+                printf("Warning!Please enter \"WHITE\" chess position:\n");
+            }
+            printf("Please choose the end position: \n");
+            while (1) {
+                scanf_s("%d %d", &c, &d, 2);
+                if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_whitechess(c, d) && check_endpoint()) break;
+                printf("Warning!Please enter the correct end position:\n");
+            }
+            move();
+            if (board[c][d] == 'k') {
+                gameover = true;
+                break;
+            }
+            continue;
+        }
+        else {
+            player = true;
+            printf("Please choose the \"BLACK\" chess position: \n");
+            while (1) {
+                scanf_s("%d %d", &a, &b, 1);
+                if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_blackchess(a, b)) break;
+                printf("Warning!Please enter \"BLACK\" chess position:\n");
+            }
+            printf("Please choose the end position: \n");
+            while (1) {
+                scanf_s("%d %d", &c, &d, 2);
+                if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_blackchess(c, d) && check_endpoint()) break;
+                printf("Warning!Please enter the correct end position:\n");
+            }
+            move();
+            if (board[c][d] == 'K') {
+                gameover = true;
+                break;
+            }
+            continue;
+        }
     }
-    printf("Please choose the end position: \n");
-    while (1) {
-        scanf_s("%d %d", &c, &d, 2);
-        if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_whitechess(c, d) && check_endpoint()) break;
-        printf("Please enter the correct end position\n");
-    }
-    move();
-    }
-    
-    //draw_board();
-
+    draw_board();
+    printf("\nGAMEOVER!!! winner ");
+    if (player)
+        printf("BLACK");
+    else
+        printf("WHITE");
 
     return 0;
 }
+
