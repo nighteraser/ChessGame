@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 char board[8][8] = {
     {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
@@ -15,8 +14,8 @@ char board[8][8] = {
 
 char blackchess[6] = { 'r', 'n', 'b', 'q', 'k', 'p' };
 char whitechess[6] = { 'R', 'N', 'B', 'Q', 'K', 'P' };
-bool player = true;
-bool gameover = false;
+int player = 1;
+int gameover = 0;
 int a, b, c, d;      // a: first y ; b: first x ; c: end y ; d: end x
 
 
@@ -32,17 +31,17 @@ void draw_board() {
     }
     printf("\n");
 }
-bool check_blackchess(int a, int b) {
+int check_blackchess(int a, int b) {
     int i = 0;
     for (; i < 6; i++)
-        if (board[a][b] == blackchess[i]) return true;
-    return false;
+        if (board[a][b] == blackchess[i]) return 1;
+    return 0;
 }
-bool check_whitechess(int a, int b) {
+int check_whitechess(int a, int b) {
     int i = 0;
     for (; i < 6; i++)
-        if (board[a][b] == whitechess[i]) return true;
-    return false;
+        if (board[a][b] == whitechess[i]) return 1;
+    return 0;
 }
 void move() {
     board[c][d] = board[a][b];
@@ -56,115 +55,115 @@ void chess_change() {
         board[a][b] = cc;
     }
 }
-bool check_endpoint() {
+int check_endpoint() {
     char chess = board[a][b];
     int vx = d - b;
     int vy = c - a;
     if (chess == 'P') {
-        if (vx == 0 && vy == -1 && board[c][d] == ' ') return true;
-        if (vx == 1 && vy == -1 && check_blackchess(c, d)) return true;
-        if (vx == -1 && vy == -1 && check_blackchess(c, d)) return true;
-        if (a == 6 && vx == 0 && vy == -2 && board[c][d] == ' ') return true;
-        return false;
+        if (vx == 0 && vy == -1 && board[c][d] == ' ') return 1;
+        if (vx == 1 && vy == -1 && check_blackchess(c, d)) return 1;
+        if (vx == -1 && vy == -1 && check_blackchess(c, d)) return 1;
+        if (a == 6 && vx == 0 && vy == -2 && board[c][d] == ' ') return 1;
+        return 0;
     }
     if (chess == 'p') {
-        if (vx == 0 && vy == 1 && board[c][d] == ' ') return true;
-        if (vx == 1 && vy == 1 && check_whitechess(c, d)) return true;
-        if (vx == -1 && vy == 1 && check_whitechess(c, d)) return true;
-        if (a == 1 && vx == 0 && vy == 2 && board[c][d] == ' ') return true;
-        return false;
+        if (vx == 0 && vy == 1 && board[c][d] == ' ') return 1;
+        if (vx == 1 && vy == 1 && check_whitechess(c, d)) return 1;
+        if (vx == -1 && vy == 1 && check_whitechess(c, d)) return 1;
+        if (a == 1 && vx == 0 && vy == 2 && board[c][d] == ' ') return 1;
+        return 0;
     }
     if (chess == 'K' || chess == 'k') {
         int dxy[8][2] = { 1, 1, 0, 1, -1, 1, 1, 0 , -1, 0, 1, -1, 0, -1, -1, -1 };
         int i = 0;
         for (; i < 8; i++) {
-            if (vx == dxy[i][0] && vy == dxy[i][1]) return true;
+            if (vx == dxy[i][0] && vy == dxy[i][1]) return 1;
         }
-        return false;
+        return 0;
     }
     if (chess == 'N' || chess == 'n') {
         int dxy[8][2] = { 2, 1, 2, -1, -2, 1, -2, -1, 1, 2, -1, 2, 1, -2, -1, -2 };
         int i = 0;
         for (; i < 8; i++) {
-            if (vx == dxy[i][0] && vy == dxy[i][1]) return true;
+            if (vx == dxy[i][0] && vy == dxy[i][1]) return 1;
         }
-        return false;
+        return 0;
     }
     if (chess == 'R' || chess == 'r') {
-        if (vx != 0 && vy != 0 ) return false;
+        if (vx != 0 && vy != 0 ) return 0;
         if (vy > 0) {
             int i = a + 1;
             while (i < c) {
-                if (board[i++][b] != ' ') return false;
+                if (board[i++][b] != ' ') return 0;
             }
         }
         else if (vx > 0){
             int i = b + 1;
             while (i < d) {
-                if (board[a][i++] != ' ') return false;
+                if (board[a][i++] != ' ') return 0;
             }
         }
         else if (vy < 0) {
             int i = a - 1;
             while (i > c) {
-                if (board[i--][b] != ' ') return false;
+                if (board[i--][b] != ' ') return 0;
             }
         }
         else {
             int i = b - 1;
             while (i > d) {
-                if (board[a][i--] != ' ') return false;
+                if (board[a][i--] != ' ') return 0;
             }
         }
-        return true;
+        return 1;
     }
     if (chess == 'B' || chess == 'b') {
-        if (abs(vx) != abs(vy)) return false;
+        if (abs(vx) != abs(vy)) return 0;
         int dxy[4][2] = { 1, 1, 1, -1, -1, 1, -1, -1 }, i = 0;
         for (; i < 4; i++) {
             if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
                 int ny = a + dxy[i][0], nx = b + dxy[i][1];
                 while (nx != d && ny != c) {
-                    if (board[ny][nx] != ' ') return false;
+                    if (board[ny][nx] != ' ') return 0;
                     ny += dxy[i][0];
                     nx += dxy[i][1];
                 }
                 break;
             }
         }
-        return true;
+        return 1;
     }
     if (chess == 'Q' || chess == 'q') {
         if (vx == 0 && vy != 0) {
             if (vy > 0) {
                 int i = a + 1;
                 while (i < c) {
-                    if (board[i++][b] != ' ') return false;
+                    if (board[i++][b] != ' ') return 0;
                 }
-                return true;
+                return 1;
             }
             else {
                 int i = a - 1;
                 while (i > c) {
-                    if (board[i--][b] != ' ') return false;
+                    if (board[i--][b] != ' ') return 0;
                 }
-                return true;
+                return 1;
             }
         }
         if (vx != 0 && vy == 0) {
             if (vx > 0) {
                 int i = b + 1;
                 while (i < d) {
-                    if (board[a][i++] != ' ') return false;
+                    if (board[a][i++] != ' ') return 0;
                 }
-                return true;
+                return 1;
             }
             else {
                 int i = b - 1;
                 while (i > d) {
-                    if (board[a][i--] != ' ') return false;
+                    if (board[a][i--] != ' ') return 0;
                 }
-                return true;
+                return 1;
             }
         }
         if (abs(vx) == abs(vy)) {
@@ -173,18 +172,18 @@ bool check_endpoint() {
                 if (vy / 2 == dxy[i][0] && vx / 2 == dxy[i][1]) {
                     int ny = a + dxy[i][0], nx = b + dxy[i][1];
                     while (nx != d && ny != c) {
-                        if (board[ny][nx] != ' ') return false;
+                        if (board[ny][nx] != ' ') return 0;
                         ny += dxy[i][0];
                         nx += dxy[i][1];
                     }
-                    return true;
+                    return 1;
                 }            
             }
         }
 
-        return false;
+        return 0;
     }
-    return false;
+    return 0;
 }
 
 
@@ -192,7 +191,7 @@ int main() {
     while (!gameover) {
         draw_board();
         if (player) {       // "White" go first. choosing the white chess
-            player = false;
+            player = 0;
             printf("Please choose the \"WHITE\" chess position: \n");
             while (1) {
                 scanf("%d %d", &a, &b, 1);
@@ -206,7 +205,7 @@ int main() {
                 printf("Warning!Please enter the correct end position:\n");
             }
             if (board[c][d] == 'k') {
-                gameover = true;
+                gameover = 1;
                 move();
                 break;
             }
@@ -225,7 +224,7 @@ int main() {
             continue;
         }
         else {
-            player = true;
+            player = 1;
             printf("Please choose the \"BLACK\" chess position: \n");
             while (1) {
                 scanf("%d %d", &a, &b, 1);
@@ -239,7 +238,7 @@ int main() {
                 printf("Warning!Please enter the correct end position:\n");
             }
             if (board[c][d] == 'K') {
-                gameover = true;
+                gameover = 1;
                 move();
                 break;
             }
@@ -267,4 +266,3 @@ int main() {
 
     return 0;
 }
-
