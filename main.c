@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 char board[8][8] = {
     {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
