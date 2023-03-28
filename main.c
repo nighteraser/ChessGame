@@ -50,7 +50,7 @@ void move() {
 void chess_change() {
     char cc;        
     printf("Choosing (B / R / Q / N)\n");
-    scanf_s("%c", &cc, 1);
+    scanf("%c", &cc, 1);
     if (cc == 'B' || cc == 'R' || cc == 'Q' || cc == 'N') {
         board[a][b] = cc;
     }
@@ -194,13 +194,13 @@ int main() {
             player = false;
             printf("Please choose the \"WHITE\" chess position: \n");
             while (1) {
-                scanf_s("%d %d", &a, &b, 1);
+                scanf("%d %d", &a, &b, 1);
                 if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_whitechess(a, b)) break;
                 printf("Warning!Please enter \"WHITE\" chess position:\n");
             }
             printf("Please choose the end position: \n");
             while (1) {
-                scanf_s("%d %d", &c, &d, 2);
+                scanf("%d %d", &c, &d, 2);
                 if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_whitechess(c, d) && check_endpoint()) break;
                 printf("Warning!Please enter the correct end position:\n");
             }
@@ -213,7 +213,7 @@ int main() {
                 char cc;
                 printf("Choosing (B / R / Q / N)\n");
                 while (1) {
-                    scanf_s("%c", &cc, 1);
+                    scanf("%c", &cc, 1);
                     if (cc == 'B' || cc == 'R' || cc == 'Q' || cc == 'N') {
                         board[a][b] = cc;
                         break;
@@ -227,13 +227,13 @@ int main() {
             player = true;
             printf("Please choose the \"BLACK\" chess position: \n");
             while (1) {
-                scanf_s("%d %d", &a, &b, 1);
+                scanf("%d %d", &a, &b, 1);
                 if (a >= 0 && a < 8 && b >= 0 && b < 8 && check_blackchess(a, b)) break;
                 printf("Warning!Please enter \"BLACK\" chess position:\n");
             }
             printf("Please choose the end position: \n");
             while (1) {
-                scanf_s("%d %d", &c, &d, 2);
+                scanf("%d %d", &c, &d, 2);
                 if (c >= 0 && c < 8 && d >= 0 && d < 8 && !check_blackchess(c, d) && check_endpoint()) break;
                 printf("Warning!Please enter the correct end position:\n");
             }
@@ -246,7 +246,7 @@ int main() {
                 char cc;
                 printf("Choosing (b / r / q / n)\n");
                 while (1) {
-                    scanf_s("%c", &cc, 1);
+                    scanf("%c", &cc, 1);
                     if (cc == 'b' || cc == 'r' || cc == 'q' || cc == 'n') {
                         board[a][b] = cc;
                         break;
